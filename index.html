@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+    <script type="importmap">
+        {
+          "imports": {
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+          }
+        }
+      </script>
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Alchemy</title>
+    <style>
+        body {
+            justify-content: center;
+            padding-top: 8em;
+            background-color: #edf2f6;
+            font-family: 'Helvetica', 'Arial', sans-serif;
+            color: #444444;
+            font-size: 9pt;
+            background-color: #FAFAFA;
+        }
+
+        .container {
+            padding: 0;
+            margin: 0;
+            list-style: none;
+            /* border: 1px solid silver; */
+            -ms-box-orient: horizontal;
+            display: -webkit-box;
+            display: -moz-box;
+            display: -ms-flexbox;
+            display: -moz-flex;
+            display: -webkit-flex;
+            display: flex;
+            -webkit-flex-wrap: wrap;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .calculator {
+            background: #494953;
+            padding: 5px;
+            /* min-width: 400px; */
+            width: 400px;
+            height: 300px;
+            margin: 10px;
+            border-radius: 25px;
+            line-height: 100px;
+            color: white;
+            font-weight: bold;
+            font-size: 2em;
+            text-align: center;
+        }
+
+        .selector {
+            margin: 5px;
+            display: flex;
+            flex-direction: column;
+            background: orange;
+            border-radius: 25px;
+            height: 50px;
+            font-size: 1em;
+            justify-content: center;
+
+        }
+
+        .crucible {
+            display: flex;
+            flex-direction: row;
+            background: rgb(71, 148, 255);
+            padding: 5px;
+            width: 400px;
+            height: 300px;
+            margin: 10px;
+            border-radius: 25px;
+            color: white;
+            font-weight: bold;
+            font-size: 2em;
+            justify-content: center;
+            text-align: center;
+        }
+    </style>
+</head>
+<body class="all">
+    <div id="app">{{ message }}
+    <div class="container">
+        <div class="calculator">
+        <div class="selector">965 or 585</div>
+            <form>
+                <li>
+                    <label>.999</label>
+                    <input type="text" :value="purequantity" @input="updatepure" style="width:100px;height:30px"></input>
+                </li>
+                <li>
+                    <label>alloy</label>
+                    <input type="text" :value="alloyquantity" @input="updatealloy" style="width:100px;height:30px"></input>
+                </li>
+                <li>
+                    <label>.585</label>
+                    <input type="text" :value="totalquantity" @input="updatetotal" style="width:100px;height:30px"></input>
+                </li>
+            </form>
+        </div>
+        <div class="crucible">
+            <svg width="240" height="300">
+                <rect x="20" y="30" width="200" height="250" rx="25" fill="brown" />
+                <rect x="20" y="30" width="200" height="200" fill="brown" />
+                <rect x="30" y="40" width="180" height="230" rx="25" fill="gray" />
+                <rect x="30" y="30" width="180" height="200" fill="gray" />
+
+                <rect x="30" y="90" width="180" height="180" rx="25" fill="yellow" />
+                <rect x="30" y="90" width="180" height="130"  fill="yellow" />
+
+            </svg>
+        </div>
+    </div>
+</div>
+</body>
+
+
+</html>
+
+<script type="module">
+    import { createApp } from 'vue'
+  
+    createApp({
+        data: () => ({
+            purequantity: "12.5",
+            alloyquantity: "10.0",
+            totalquantity: "100.0"
+        }),
+            computed: {
+                output() {
+                    return null
+                }
+            },
+            methods: {
+                updatepure: debounce(function (e) {
+                    this.alloyquantity = "100"
+                    this.totalquantity = "100"
+                },100),
+
+                updatealloy: debounce(function (e) {
+                    this.purequantity = "100"
+                    this.totalquantity = "100"
+                },100),
+                updatetotal: debounce(function (e) {
+                    this.purequantity = "100"
+                    this.alloyquantity = "100"
+                }, 100)
+            }
+    }).mount('#app')
+  </script>
