@@ -3,7 +3,8 @@
     <script type="importmap">
         {
           "imports": {
-            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js"
+            "vue": "https://unpkg.com/vue@3/dist/vue.esm-browser.js",
+            "lodash-es": "https://cdn.jsdelivr.net/npm/lodash-es@4.17.21/+esm"
           }
         }
       </script>
@@ -45,7 +46,7 @@
             padding: 5px;
             /* min-width: 400px; */
             width: 400px;
-            height: 300px;
+            height: 400px;
             margin: 10px;
             border-radius: 25px;
             line-height: 100px;
@@ -85,7 +86,7 @@
     </style>
 </head>
 <body class="all">
-    <div id="app">{{ message }}
+    <div id="app">
     <div class="container">
         <div class="calculator">
         <div class="selector">965 or 585</div>
@@ -125,12 +126,14 @@
 
 <script type="module">
     import { createApp } from 'vue'
+    import { debounce } from 'lodash-es'
   
     createApp({
         data: () => ({
             purequantity: "12.5",
             alloyquantity: "10.0",
-            totalquantity: "100.0"
+            totalquantity: "100.0",
+            purity : 0.585
         }),
             computed: {
                 output() {
@@ -139,8 +142,8 @@
             },
             methods: {
                 updatepure: debounce(function (e) {
-                    this.alloyquantity = "100"
-                    this.totalquantity = "100"
+                    this.totalquantity = this.purequantity/this.purity
+                    this.alloyquantity = this.totalquantity-this.purequantity
                 },100),
 
                 updatealloy: debounce(function (e) {
