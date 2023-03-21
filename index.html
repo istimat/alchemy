@@ -17,11 +17,10 @@
         body {
             justify-content: center;
             padding-top: 8em;
-            background-color: #edf2f6;
             font-family: 'Helvetica', 'Arial', sans-serif;
             color: #444444;
             font-size: 9pt;
-            background-color: #FAFAFA;
+            background-color: #c4daf3;
         }
 
         .container {
@@ -43,21 +42,21 @@
 
         .calculator {
             background: #494953;
-            padding: 5px;
+            padding: 20px;
             /* min-width: 400px; */
             width: 400px;
             height: 400px;
             margin: 10px;
             border-radius: 25px;
-            line-height: 100px;
+            line-height: 60px;
             color: white;
             font-weight: bold;
             font-size: 2em;
-            text-align: center;
+            /* justify-content: space-between; */
         }
 
         .selector {
-            margin: 5px;
+            margin: 0px;
             display: flex;
             flex-direction: column;
             background: orange;
@@ -65,14 +64,21 @@
             height: 50px;
             font-size: 1em;
             justify-content: center;
+            text-align: center;
+            
 
+        }
+        input[type="radio"] {
+            margin-right: 5px;
+            /* height: 0.8em; */
+            width: 15px;
         }
 
         .crucible {
             display: flex;
             flex-direction: row;
             background: rgb(71, 148, 255);
-            padding: 5px;
+            padding: 20px;
             width: 400px;
             height: 400px;
             margin: 10px;
@@ -82,28 +88,71 @@
             font-size: 2em;
             justify-content: center;
             text-align: center;
+            align-items: center;
         }
+
+        label {
+            display: flex;
+            flex-direction: row;
+            justify-content:space-between;
+            text-align: center;
+            /* width: 400px; */
+            line-height: 70px;
+            /* margin-bottom: 0px; */
+            margin: 10px;
+          }
+          
+        input {
+            height: 20px;
+            flex: 0 0 50px;
+            border-radius: 5px;
+            margin-left: 10px;
+            margin-top: 20px;
+            margin-right: 50px;
+            font-size: 0.9em;
+          }
+
+        button {
+            height: 40px;
+            width: 200px;
+            border-radius: 25px;
+            margin-left: 100px;
+            background: orange;
+            font-size: 1em;
+            color: white;
+            font-weight: bold;
+            box-shadow: none;
+            border: 0;
+        }
+
+
     </style>
 </head>
 <body class="all">
     <div id="app">
     <div class="container">
         <div class="calculator">
-        <div class="selector">965 or 585</div>
+        <div class="selector">
             <form>
-                <li>
-                    <label>.999</label>
-                    <input type="text" :value="purequantity" @input="updatepure" style="width:100px;height:30px"></input>
-                </li>
-                <li>
-                    <label>alloy</label>
-                    <input type="text" :value="alloyquantity" @input="updatealloy" style="width:100px;height:30px"></input>
-                </li>
-                <li>
-                    <label>.585</label>
-                    <input type="text" :value="totalquantity" @input="updatetotal" style="width:100px;height:30px"></input>
-                </li>
+                   Purity
+                    <input type="radio" id="585" value="0.585" name="purity" v-model="purity" />585
+                    <input type="radio" id="925" value="0.925" name="purity" v-model="purity" />925
             </form>
+        </div>
+            <form>
+                    <label>
+                    0.999<input type="text" v-model="purequantity" style="width:100px;height:30px"></input>
+                    </label>
+                    <label>
+                    alloy<input type="text" v-model="alloyquantity" style="width:100px;height:30px"></input>
+                    </label>
+                    
+                    <label>
+                    {{purity}}<input type="text" v-model="totalquantity" style="width:100px;height:30px"></input>
+                    </label>
+            </form>
+            <button @click="calculate">calculate</button>
+            <button @click="reset">reset</button>
         </div>
         <div class="crucible">
             <svg width="240" height="300">
@@ -130,10 +179,10 @@
   
     createApp({
         data: () => ({
-            purequantity: "12.5",
-            alloyquantity: "10.0",
-            totalquantity: "100.0",
-            purity : 0.585
+            purequantity: "0.0",
+            alloyquantity: "0.0",
+            totalquantity: "0.0",
+            purity : '0.585'
         }),
             computed: {
                 output() {
@@ -141,19 +190,37 @@
                 }
             },
             methods: {
-                updatepure: debounce(function (e) {
-                    this.totalquantity = this.purequantity/this.purity
-                    this.alloyquantity = this.totalquantity-this.purequantity
-                },100),
+                calculate(event) {
+                     // `this` inside methods points to the current active instance
+                    //alert(` ${this.purequantity}!`)
+                    
+                    if (this.alloyquantity == "0.0" && this.totalquantity == "0.0") {
+                        this.totalquantity = this.purequantity/this.purity
+                        this.alloyquantity = this.totalquantity-this.purequantity
+                        
+                    }
 
-                updatealloy: debounce(function (e) {
-                    this.purequantity = "100"
-                    this.totalquantity = "100"
-                },100),
-                updatetotal: debounce(function (e) {
-                    this.purequantity = "100"
-                    this.alloyquantity = "100"
-                }, 100)
+                    if (this.purequantity == "0.0" && this.totalquantity == "0.0") {
+                        this.totalquantity = this.alloyquantity/(1-this.purity)
+                        this.purequantity = this.totalquantity-this.alloyquantity
+                        
+                    }
+
+                    if (this.alloyquantity == "0.0" && this.purequantity == "0.0") {
+                        this.purequantity = this.totalquantity*this.purity
+                        this.alloyquantity = this.totalquantity*(1-this.purity)
+                        
+                    }
+                    // `event` is the native DOM event
+                    // if (event) {
+                    //   alert(event.target.tagName)
+                    // }
+                 },
+                 reset(event) {
+                    this.purequantity = "0.0"
+                    this.alloyquantity = "0.0"
+                    this.totalquantity = "0.0"
+                 }
             }
     }).mount('#app')
   </script>
